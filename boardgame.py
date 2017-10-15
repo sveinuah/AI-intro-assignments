@@ -107,10 +107,15 @@ def boardInit():
 # ------------ Game -------------------------------
 
 def game():
-	print(nodeArray[0][0].obstacle)
-	print(nodeArray[0][0].edges)
-	print(nodeArray[0][0].cost)
-	print(nodeArray[0][0].distanceToGoal)
+
+	for i in range(0,numRows):
+		for j in range(0,numCols):
+			if nodeArray[i][j].start:
+				startX = i
+				startY = j
+
+
+	shortestPath = astar.astarAlgorithm(nodeArray,startX,startY)
 
 boardInit()
 game()
