@@ -86,8 +86,20 @@ def boardInit():
 
 def game():
 	print("Game!")
+	#print(formattedBoard)
 
-	shortestPath = astar.astarAlgorithm(formattedBoard)
+	endNode = astar.astarAlgorithm(formattedBoard)
+	path = [endNode]
+	print("EndNode? ", endNode.end,"total cost: ",endNode.cost)
+	tempNode = endNode
+	while not tempNode.start:
+		tempNode = tempNode.previousNode
+		path.append(tempNode)
+
+	path = list(reversed(path))
+	for node in path:
+		print(node.id,end=",")
+
 
 boardInit()
 game()
