@@ -42,9 +42,6 @@ def boardInit():
 		for char in row:
 			if char ==  'B':
 				goalNode = colNum + rowLength*rowNum
-			if char == 'A':
-				startNode = colNum + rowLength*rowNum
-
 			colNum += 1		
 		rowNum += 1
 		colNum = 0
@@ -60,11 +57,11 @@ def boardInit():
 	
 			if colNum > 0:
 				nodeEdges.append("1 "+str(nodeNum-1))
-			if colNum < rowLength-1:
+			if colNum < rowLength-2:
 				nodeEdges.append("1 "+str(nodeNum+1))
 			if rowNum > 0:
 				nodeEdges.append("1 "+str(nodeNum - rowLength))
-			if rowNum < colLength-1:
+			if rowNum < colLength-2:
 				nodeEdges.append("1 "+str(nodeNum + rowLength))
 
 			for edge in nodeEdges:
@@ -90,7 +87,7 @@ def boardInit():
 def game():
 	print("Game!")
 
-	shortestPath = astar.astarAlgorithm(formattedBoard,startNode)
+	shortestPath = astar.astarAlgorithm(formattedBoard)
 
 boardInit()
 game()
