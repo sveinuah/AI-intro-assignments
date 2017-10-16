@@ -1,10 +1,12 @@
+from operator import attrgetter
+
 class Node:
 	def __init__(self,id,dist):
 		self.id = id
 		self.cost = 10000
 		self.distanceToGoal = dist
 		self.edges = []
-		self.previousNode = id
+		self.previousNode = None
 		self.start = False
 		self.end = False
 
@@ -36,7 +38,7 @@ def astarInit(board):
 
 		nodeArray.append(node)
 	
-	startNode = Node(-1,-1)
+	startNode = Node(-1,10000)
 
 	for node in nodeArray:
 		if node.start:
@@ -71,6 +73,7 @@ def astarAlgorithm(board):
 
 	while True:
 		if len(nodeQueue) == 0:
+			print("failed")
 			return -1
 		
 		currentNode = nodeQueue[0]
@@ -90,3 +93,5 @@ def astarAlgorithm(board):
 				if edge.connectedNode.cost > (currentNode.cost + edge.cost):
 					edge.connectedNode.cost = currentNode.cost + edge.cost
 					edge.connectedNode.previousNode = currentNode
+
+		nodeQueue = sorted(nodeQueue,key = lambda nodeQueue: nodeQueue.cost+nodeQueue.distanceToGoal)
