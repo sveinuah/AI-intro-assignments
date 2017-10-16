@@ -54,10 +54,9 @@ def boardInit():
 			nodeNum = colNum + (rowNum)*rowLength
 			nodeEdges = []
 			formattedBoard += (str(nodeNum)+',')
-	
 			if colNum > 0:
 				nodeEdges.append("1 "+str(nodeNum-1))
-			if colNum < rowLength-2:
+			if colNum < rowLength-1:
 				nodeEdges.append("1 "+str(nodeNum+1))
 			if rowNum > 0:
 				nodeEdges.append("1 "+str(nodeNum - rowLength))
@@ -86,7 +85,6 @@ def boardInit():
 
 def game():
 	print("Game!")
-	#print(formattedBoard)
 
 	endNode = astar.astarAlgorithm(formattedBoard)
 	path = [endNode]
