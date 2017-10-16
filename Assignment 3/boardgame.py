@@ -3,8 +3,9 @@ import astar
 goalNode = -1
 startNode = -1
 
-fileList = ["boards/board-1-1.txt","boards/board-1-2.txt","boards/board-1-3.txt","boards/board-1-4.txt"]
+fileList = ["boards/board-1-1.txt","boards/board-1-2.txt","boards/board-1-3.txt","boards/board-1-4.txt","boards/board-2-1.txt","boards/board-2-2.txt","boards/board-2-3.txt","boards/board-2-4.txt"]
 formattedBoard = ""
+costDict = {".":1,"#":1,"A":0,"B":0,"w":100,"m":50,"f":10,"g":5,"r":1}
 
 def findDistanceToGoal(nodeNum,goalNode,rowLength,colLength):
 	goalRow = int(goalNode/rowLength)
@@ -15,7 +16,7 @@ def findDistanceToGoal(nodeNum,goalNode,rowLength,colLength):
 	return abs(goalRow-nodeRow) + abs(goalCol-nodeCol)
 
 def boardInit():
-	choice = int(input("Input number between 1-4 to choose a board: "))
+	choice = int(input("Input number between 1-8 to choose a board: "))
 	filename = fileList[choice-1]
 
 	with open(filename) as f:
@@ -46,39 +47,33 @@ def boardInit():
 		rowNum += 1
 		colNum = 0
 
-	rowNum = 0
-	colNum = 0
-
-	for row in rows:
-		for char in row:
-			nodeNum = colNum + (rowNum)*rowLength
+	for row in range(0,len(rows)):
+		for col in range(0,len(rows[row])):
+			nodeNum = col + (row)*rowLength
 			nodeEdges = []
 			formattedBoard += (str(nodeNum)+',')
-			if colNum > 0:
-				nodeEdges.append("1 "+str(nodeNum-1))
-			if colNum < rowLength-1:
-				nodeEdges.append("1 "+str(nodeNum+1))
-			if rowNum > 0:
-				nodeEdges.append("1 "+str(nodeNum - rowLength))
-			if rowNum < colLength-2:
-				nodeEdges.append("1 "+str(nodeNum + rowLength))
+			if col > 0:
+				nodeEdges.append(str(costDict[rows[row][col-1]])+" "+str(nodeNum-1))
+			if col < rowLength-1:
+				nodeEdges.append(str(costDict[rows[row][col+1]])+" "+str(nodeNum+1))
+			if row > 0:
+				nodeEdges.append(str(costDict[rows[row-1][col]])+" "+str(nodeNum - rowLength))
+			if row < colLength-2:
+				nodeEdges.append(str(costDict[rows[row+1][col]])+" "+str(nodeNum + rowLength))
 
 			for edge in nodeEdges:
 				formattedBoard += (edge+':')
 			formattedBoard = formattedBoard[:(len(formattedBoard)-1)]
 			formattedBoard += ','
 
+			char = rows[row][col]
 			if char == '#':
 				formattedBoard += "10000,"
 			else:	
 				formattedBoard += str(findDistanceToGoal(nodeNum,goalNode,rowLength,colLength))+','
 
-			nodeType = char
-			formattedBoard += nodeType+'\n'
+			formattedBoard += char +'\n'
 
-			colNum += 1
-		rowNum += 1
-		colNum = 0
 	formattedBoard = formattedBoard[:(len(formattedBoard)-1)] #Remove last \n
 
 # ------------ Game -------------------------------
