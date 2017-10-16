@@ -46,10 +46,6 @@ def astarInit(board):
 #<nodeNumber>,<edgecost1><space><connected node>:<edgecost2><space><connecten node 2>:...,<distance to goal>,<A = start or B = goal\n
 #<nodeNumber>,...
 
-def astarAlgorithm(board):
+def astarAlgorithm(board,startNode):
 	nodeArray = astarInit(board)
-	print(nodeArray)
-
-
-
 	return 0

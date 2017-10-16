@@ -1,5 +1,8 @@
 import astar
 
+goalNode = -1
+startNode = -1
+
 fileList = ["boards/board-1-1.txt","boards/board-1-2.txt","boards/board-1-3.txt","boards/board-1-4.txt"]
 formattedBoard = ""
 
@@ -25,7 +28,6 @@ def boardInit():
 	rowNum = 0
 	colNum = 0
 	nodeNum = 0
-	goalNode = -1
 	nodeEdges = []
 	nodeGoalDistance = 0
 	nodeType = ""
@@ -33,11 +35,15 @@ def boardInit():
 	rowLength = len(rows[0]) #Assuming equal row length
 	colLength = len(rows) #Assuming equal column length
 	global formattedBoard
+	global startNode
+	global goalNode
 
 	for row in rows:
 		for char in row:
 			if char ==  'B':
 				goalNode = colNum + rowLength*rowNum
+			if char == 'A':
+				startNode = colNum + rowLength*rowNum
 
 			colNum += 1		
 		rowNum += 1
@@ -84,7 +90,7 @@ def boardInit():
 def game():
 	print("Game!")
 
-	shortestPath = astar.astarAlgorithm(formattedBoard)
+	shortestPath = astar.astarAlgorithm(formattedBoard,startNode)
 
 boardInit()
 game()
