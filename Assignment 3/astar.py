@@ -21,7 +21,7 @@ def astarInit(board):
 
 	for string in nodes:
 		attributes = string.split(',')
-		node = Node(attributes[stringParts['id']],attributes[stringParts['distanceToGoal']])
+		node = Node(int(attributes[stringParts['id']]),int(attributes[stringParts['distanceToGoal']]))
 		nodeType = attributes[stringParts['nodeType']]
 
 		if nodeType == 'A':
@@ -32,11 +32,25 @@ def astarInit(board):
 		edges = attributes[stringParts['edges']].split(':')
 		for edge in edges:
 			edge = edge.split(" ")
-			node.edges.append(Edge(edge[0],edge[1]))
+			node.edges.append(Edge(int(edge[0]),int(edge[1])))
 
 		nodeArray.append(node)
 	
-	return nodeArray
+	startNode = Node(-1,-1)
+
+	for node in nodeArray:
+		if node.start:
+			startNode = node
+		for edge in node.edges:
+			tempIndex = 0
+			tempNode = nodeArray[0]
+			while tempNode.id != edge.connectedNode:
+				#print(len(nodeArray),tempIndex, edge.connectedNode)
+				tempNode = nodeArray[tempIndex]
+				tempIndex += 1
+			edge.connectedNode = tempNode
+
+	return nodeArray, startNode
 
 ########################################################################################
 ################                  PUBLIC FINCTIONS             #########################
@@ -46,6 +60,33 @@ def astarInit(board):
 #<nodeNumber>,<edgecost1><space><connected node>:<edgecost2><space><connecten node 2>:...,<distance to goal>,<A = start or B = goal\n
 #<nodeNumber>,...
 
-def astarAlgorithm(board,startNode):
-	nodeArray = astarInit(board)
-	return 0
+def astarAlgorithm(board):
+	nodeArray, startNode = astarInit(board)
+	shortestPath = 10000
+	currentNode = startNode
+	previousNode = startNode
+	currentNode.cost = 0
+	nodeQueue = [currentNode]
+	exploredNodes = []
+
+	while True:
+		if len(nodeQueue) == 0:
+			return -1
+		
+		currentNode = nodeQueue[0]
+		nodeQueue = nodeQueue[1:]
+
+		if currentNode.end:
+			return currentNode
+
+		exploredNodes.append(currentNode)
+
+		for edge in currentNode.edges:
+			if edge.connectedNode not in exploredNodes and edge.connectedNode not in nodeQueue:
+				edge.connectedNode.cost = currentNode.cost + edge.cost
+				edge.connectedNode.previousNode = currentNode
+				nodeQueue.append(edge.connectedNode)
+			elif edge.connectedNode in nodeQueue:
+				if edge.connectedNode.cost > (currentNode.cost + edge.cost):
+					edge.connectedNode.cost = currentNode.cost + edge.cost
+					edge.connectedNode.previousNode = currentNode
