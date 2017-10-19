@@ -1,5 +1,3 @@
-from operator import attrgetter
-
 class Node:
 	def __init__(self,id,dist):
 		self.id = id
