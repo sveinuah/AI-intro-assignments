@@ -1,5 +1,6 @@
 import dijkstra
 import astar
+import bfs
 
 goalNode = -1
 startNode = -1
@@ -92,7 +93,7 @@ def game():
 	elif algorithm == 2:
 		endNode = dijkstra.dijkstraAlgorithm(formattedBoard)
 	elif algorithm == 3:
-		endNode = 0
+		endNode = bfs.bfsAlgorithm(formattedBoard)
 	
 
 	path = [endNode]
