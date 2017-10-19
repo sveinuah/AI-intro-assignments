@@ -89,12 +89,13 @@ def bfsAlgorithm(board):
 			if edge.connectedNode.cost == INF:
 				exploredNodes.append(edge.connectedNode)
 			elif edge.connectedNode not in exploredNodes and edge.connectedNode not in nodeQueue:
+				nodeQueue.append(edge.connectedNode)
 				edge.connectedNode.cost = currentNode.cost + edge.cost
 				edge.connectedNode.previousNode = currentNode
-				nodeQueue.append(edge.connectedNode)
-			elif edge.connectedNode in nodeQueue:
-				if edge.connectedNode.cost > (currentNode.cost + edge.cost):
-					edge.connectedNode.cost = currentNode.cost + edge.cost
-					edge.connectedNode.previousNode = currentNode
+
+			elif edge.connectedNode.cost > (currentNode.cost + edge.cost):
+				edge.connectedNode.cost = currentNode.cost + edge.cost
+				edge.connectedNode.previousNode = currentNode
+		
 
 		#nodeQueue = sorted(nodeQueue,key = lambda nodeQueue: nodeQueue.cost+node.nodeQueue.distanceToGoal)
