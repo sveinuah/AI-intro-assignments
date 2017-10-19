@@ -1,3 +1,4 @@
+import dijkstra
 import astar
 
 goalNode = -1
@@ -81,7 +82,9 @@ def boardInit():
 def game():
 	print("Game!")
 
-	endNode = astar.astarAlgorithm(formattedBoard)
+	endNode = dijkstra.dijkstraAlgorithm(formattedBoard)
+	#endNode = astar.astarAlgorithm(formattedBoard)
+
 	path = [endNode]
 	print("EndNode? ", endNode.end,"total cost: ",endNode.cost)
 	tempNode = endNode
