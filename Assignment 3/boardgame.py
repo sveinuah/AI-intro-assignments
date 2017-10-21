@@ -1,4 +1,6 @@
+import dijkstra
 import astar
+import bfs
 
 goalNode = -1
 startNode = -1
@@ -80,8 +82,20 @@ def boardInit():
 
 def game():
 	print("Game!")
+	algorithm = -1
 
-	endNode = astar.astarAlgorithm(formattedBoard)
+	while algorithm < 1 or algorithm > 3:
+		algorithm = input("-- Choose algorith --\n1: A*\n2: Dijkstra\n3: BFS\nChoice (1-3) = ")
+		algorithm = int(algorithm)
+
+	if algorithm == 1:
+		endNode = astar.astarAlgorithm(formattedBoard)
+	elif algorithm == 2:
+		endNode = dijkstra.dijkstraAlgorithm(formattedBoard)
+	elif algorithm == 3:
+		endNode = bfs.bfsAlgorithm(formattedBoard)
+	
+
 	path = [endNode]
 	print("EndNode? ", endNode.end,"total cost: ",endNode.cost)
 	tempNode = endNode

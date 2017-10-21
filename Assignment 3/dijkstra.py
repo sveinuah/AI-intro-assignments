@@ -1,3 +1,5 @@
+INF = 50000
+
 class Node:
 	def __init__(self,id,dist):
 		self.id = id
@@ -13,7 +15,7 @@ class Edge:
 		self.cost = cost
 		self.connectedNode = node
 
-def astarInit(board):
+def dijkstraInit(board):
 	stringParts = {'id':0,'edges':1,'distanceToGoal':2,'nodeType':3}
 
 	nodes  = board.split('\n')
@@ -28,6 +30,8 @@ def astarInit(board):
 			node.start = True
 		elif nodeType == 'B':
 			node.end = True
+		elif nodeType == '#':
+			node.cost = INF
 
 		edges = attributes[stringParts['edges']].split(':')
 		for edge in edges:
@@ -60,9 +64,9 @@ def astarInit(board):
 #<nodeNumber>,<edgecost1><space><connected node>:<edgecost2><space><connecten node 2>:...,<distance to goal>,<A = start or B = goal\n
 #<nodeNumber>,...
 
-def astarAlgorithm(board):
-	nodeArray, startNode = astarInit(board)
-	shortestPath = 10000
+def dijkstraAlgorithm(board):
+	nodeArray, startNode = dijkstraInit(board)
+	shortestPath = INF
 	currentNode = startNode
 	previousNode = startNode
 	currentNode.cost = 0
@@ -83,7 +87,9 @@ def astarAlgorithm(board):
 		exploredNodes.append(currentNode)
 
 		for edge in currentNode.edges:
-			if edge.connectedNode not in exploredNodes and edge.connectedNode not in nodeQueue:
+			if edge.connectedNode.cost == INF:
+				exploredNodes.append(edge.connectedNode)
+			elif edge.connectedNode not in exploredNodes and edge.connectedNode not in nodeQueue:
 				edge.connectedNode.cost = currentNode.cost + edge.cost
 				edge.connectedNode.previousNode = currentNode
 				nodeQueue.append(edge.connectedNode)
@@ -92,4 +98,4 @@ def astarAlgorithm(board):
 					edge.connectedNode.cost = currentNode.cost + edge.cost
 					edge.connectedNode.previousNode = currentNode
 
-		nodeQueue = sorted(nodeQueue,key = lambda nodeQueue: nodeQueue.cost+nodeQueue.distanceToGoal)
+		nodeQueue = sorted(nodeQueue,key = lambda nodeQueue: nodeQueue.cost)
