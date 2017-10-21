@@ -111,6 +111,25 @@ class MinimaxAgent(MultiAgentSearchAgent):
       Your minimax agent (question 2)
     """
 
+    def maxValue(self, state):
+        # Need some termial test to stop recursion
+
+        v = -100000
+        for action in state.getLegalActions(0):
+            for ghost in range(1,state.getNumAgents()):
+                v = max(v,minValue(state.generateSuccessor(ghost,action))) # v is a state and cannot be used with min/max find alternative
+
+        return v
+
+    def minValue(self, state):
+        # Need some termial test to stop recursion 
+
+        v = -100000
+        for action in state.getLegalActions(0):
+            v = min(v,maxValue(state.generateSuccessor(0,action))) # v is a state and cannot be used with min/max find alternative
+
+        return v
+
     def getAction(self, gameState):
         """
           Returns the minimax action from the current gameState using self.depth
@@ -128,7 +147,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
           gameState.getNumAgents():
             Returns the total number of agents in the game
         """
-        "*** YOUR CODE HERE ***"
+
         util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
