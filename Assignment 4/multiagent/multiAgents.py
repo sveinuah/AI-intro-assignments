@@ -116,9 +116,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return scoreEvaluationFunction(state)
 
         v = -100000
-        for action in state.getLegalActions(0):
-            for ghost in range(1,state.getNumAgents()):
-                v = max(v,self.minValue(scoreEvaluationFunction(state.generateSuccessor(ghost,action)))) # v is a state and cannot be used with min/max find alternative
+        for ghost in range(1,state.getNumAgents()): 
+            for action in state.getLegalActions(ghost):
+                v = max(v,self.minValue(state.generateSuccessor(ghost,action)))
 
         return v
 
@@ -128,7 +128,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         v = 100000
         for action in state.getLegalActions(0):
-            v = min(v,self.maxValue(scoreEvaluationFunction(state.generateSuccessor(0,action)))) # v is a state and cannot be used with min/max find alternative
+            v = min(v,self.maxValue(state.generateSuccessor(0,action)))
 
         return v
 
@@ -151,7 +151,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         chosenAction = Directions.STOP
         currentMaxValue = -100000
-        for action in state.getLegalActions(0):
+        for action in gameState.getLegalActions(0):
             if self.maxValue(gameState.generateSuccessor(0,action)) > currentMaxValue:
                 chosenAction = action
 
