@@ -152,13 +152,49 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
       Your minimax agent with alpha-beta pruning (question 3)
     """
+    def maxValue(self, state, currentRecursionDepth, alpha, beta):
+        if state.isWin() or state.isLose() or currentRecursionDepth >= self.depth:
+            return scoreEvaluationFunction(state)
+
+        v = -10000
+        for action in state.getLegalActions(0):
+            v = max(v, self.minValue(state.generateSuccessor(0,action), 1,currentRecursionDepth+1,alpha,beta))
+            if v > beta:
+                return v
+            alpha = max(alpha,v)
+
+        return v
+
+    def minValue(self, state, unit, currentRecursionDepth, alpha, beta):
+        if state.isWin() or state.isLose(): 
+            return scoreEvaluationFunction(state)
+            
+        v = 10000
+        for action in state.getLegalActions(unit):
+            if unit == state.getNumAgents() - 1:    
+                v = min(v, self.maxValue(state.generateSuccessor(unit,action), currentRecursionDepth,alpha,beta))
+            else:
+                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth,alpha,beta))
+            
+            if v < alpha: return v
+            beta = min(beta,v)
+
+        return v
+
 
     def getAction(self, gameState):
         """
           Returns the minimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        chosenAction = Directions.STOP
+        currentMaxValue = -100000
+        for action in gameState.getLegalActions(0):
+            checkedActionValue = self.minValue(gameState.generateSuccessor(0,action),1,1,-10000,10000)
+            if checkedActionValue > currentMaxValue:
+                currentMaxValue = checkedActionValue
+                chosenAction = action
+
+        return chosenAction
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
