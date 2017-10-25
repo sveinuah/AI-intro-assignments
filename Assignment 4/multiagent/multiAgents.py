@@ -108,6 +108,7 @@ class MultiAgentSearchAgent(Agent):
 
 class MinimaxAgent(MultiAgentSearchAgent):
 
+    # maxValue is only called for pacMan, maximizing score. currentRecursionDepth is added to provide boudaries to the recursion.
     def maxValue(self, state, currentRecursionDepth):
         if state.isWin() or state.isLose() or currentRecursionDepth >= self.depth:
             return scoreEvaluationFunction(state)
@@ -118,36 +119,25 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         return v
 
+    # minValue is called for every ghost, but the recursion-depth is only incremented when minValue is called from maxValue.
+    # This is done to assure the right recursion depth required in the autograding.
+    # unit parameter is added to track which ghost's turn it is.
     def minValue(self, state, unit, currentRecursionDepth):
         if state.isWin() or state.isLose(): 
             return scoreEvaluationFunction(state)
 
         v = 100000
         for action in state.getLegalActions(unit):
-            if unit == state.getNumAgents() - 1:        
+            if unit == state.getNumAgents() - 1:    
                 v = min(v, self.maxValue(state.generateSuccessor(unit,action), currentRecursionDepth))
             else:
-                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth))
+                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth)) 
 
         return v
 
+    # getAction holds the logic to convert from value to actionm, as well as starting the minimax algorithm.
     def getAction(self, gameState):
-        """
-          Returns the minimax action from the current gameState using self.depth
-          and self.evaluationFunction.
 
-          Here are some method calls that might be useful when implementing minimax.
-
-          gameState.getLegalActions(agentIndex):
-            Returns a list of legal actions for an agent
-            agentIndex=0 means Pacman, ghosts are >= 1
-
-          gameState.generateSuccessor(agentIndex, action):
-            Returns the successor game state after an agent takes an action
-
-          gameState.getNumAgents():
-            Returns the total number of agents in the game
-        """
         chosenAction = Directions.STOP
         currentMaxValue = -100000
         for action in gameState.getLegalActions(0):
