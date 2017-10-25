@@ -119,8 +119,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return v
 
     def minValue(self, state, unit, currentRecursionDepth):
-        #if state.isWin() or state.isLose() or currentRecursionDepth > self.depth: 
-        #    return scoreEvaluationFunction(state)
+        if state.isWin() or state.isLose(): 
+            return scoreEvaluationFunction(state)
 
         v = 100000
         for action in state.getLegalActions(unit):
