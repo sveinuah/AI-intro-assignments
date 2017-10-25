@@ -109,23 +109,25 @@ class MultiAgentSearchAgent(Agent):
 class MinimaxAgent(MultiAgentSearchAgent):
 
     def maxValue(self, state, currentRecursionDepth):
-        if state.isWin() or state.isLose() or currentRecursionDepth > self.depth:
+        if state.isWin() or state.isLose() or currentRecursionDepth >= self.depth:
             return scoreEvaluationFunction(state)
 
         v = -100000
-        for ghost in range(1,state.getNumAgents()): 
-            for action in state.getLegalActions(ghost):
-                v = max(v,self.minValue(state.generateSuccessor(ghost,action), currentRecursionDepth + 1))
+        for action in state.getLegalActions(0):
+            v = max(v,self.minValue(state.generateSuccessor(0,action), 1, currentRecursionDepth+1))
 
         return v
 
-    def minValue(self, state, currentRecursionDepth):
-        if state.isWin() or state.isLose() or currentRecursionDepth > self.depth: 
-            return scoreEvaluationFunction(state)
+    def minValue(self, state, unit, currentRecursionDepth):
+        #if state.isWin() or state.isLose() or currentRecursionDepth > self.depth: 
+        #    return scoreEvaluationFunction(state)
 
         v = 100000
-        for action in state.getLegalActions(0):
-            v = min(v,self.maxValue(state.generateSuccessor(0,action), currentRecursionDepth + 1))
+        for action in state.getLegalActions(unit):
+            if unit == state.getNumAgents() - 1:        
+                v = min(v, self.maxValue(state.generateSuccessor(unit,action), currentRecursionDepth))
+            else:
+                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth))
 
         return v
 
@@ -149,7 +151,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         chosenAction = Directions.STOP
         currentMaxValue = -100000
         for action in gameState.getLegalActions(0):
-            checkedActionValue = self.maxValue(gameState.generateSuccessor(0,action),1)
+            checkedActionValue = self.minValue(gameState.generateSuccessor(0,action),1,1)
             if checkedActionValue > currentMaxValue:
                 currentMaxValue = checkedActionValue
                 chosenAction = action
