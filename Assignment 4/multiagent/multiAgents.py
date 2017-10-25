@@ -107,28 +107,25 @@ class MultiAgentSearchAgent(Agent):
         self.depth = int(depth)
 
 class MinimaxAgent(MultiAgentSearchAgent):
-    """
-      Your minimax agent (question 2)
-    """
 
-    def maxValue(self, state):
-        if state.isWin() or state.isLose(): #Need to add recursion depth boundary
+    def maxValue(self, state, currentRecursionDepth):
+        if state.isWin() or state.isLose() or currentRecursionDepth > self.depth:
             return scoreEvaluationFunction(state)
 
         v = -100000
         for ghost in range(1,state.getNumAgents()): 
             for action in state.getLegalActions(ghost):
-                v = max(v,self.minValue(state.generateSuccessor(ghost,action)))
+                v = max(v,self.minValue(state.generateSuccessor(ghost,action), currentRecursionDepth + 1))
 
         return v
 
-    def minValue(self, state):
-        if state.isWin() or state.isLose(): #Need to add recursion depth boundary
+    def minValue(self, state, currentRecursionDepth):
+        if state.isWin() or state.isLose() or currentRecursionDepth > self.depth: 
             return scoreEvaluationFunction(state)
 
         v = 100000
         for action in state.getLegalActions(0):
-            v = min(v,self.maxValue(state.generateSuccessor(0,action)))
+            v = min(v,self.maxValue(state.generateSuccessor(0,action), currentRecursionDepth + 1))
 
         return v
 
@@ -152,7 +149,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         chosenAction = Directions.STOP
         currentMaxValue = -100000
         for action in gameState.getLegalActions(0):
-            if self.maxValue(gameState.generateSuccessor(0,action)) > currentMaxValue:
+            checkedActionValue = self.maxValue(gameState.generateSuccessor(0,action),1)
+            if checkedActionValue > currentMaxValue:
+                currentMaxValue = checkedActionValue
                 chosenAction = action
 
         return chosenAction
