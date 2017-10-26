@@ -149,9 +149,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return chosenAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
-    """
-      Your minimax agent with alpha-beta pruning (question 3)
-    """
+    
     def maxValue(self, state, currentRecursionDepth, alpha, beta):
         if state.isWin() or state.isLose() or currentRecursionDepth >= self.depth:
             return scoreEvaluationFunction(state)
@@ -165,6 +163,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         return v
 
+    # To add functionality for multiple ghosts, we had to compare alpha and v before checking next level nodes.
     def minValue(self, state, unit, currentRecursionDepth, alpha, beta):
         if state.isWin() or state.isLose(): 
             return scoreEvaluationFunction(state)
