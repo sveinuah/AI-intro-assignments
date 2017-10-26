@@ -141,9 +141,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         chosenAction = Directions.STOP
         currentMaxValue = -100000
         for action in gameState.getLegalActions(0):
-            checkedActionValue = self.minValue(gameState.generateSuccessor(0,action),1,1)
-            if checkedActionValue > currentMaxValue:
-                currentMaxValue = checkedActionValue
+            v = self.minValue(gameState.generateSuccessor(0,action),1,1)
+            if v > currentMaxValue:
+                currentMaxValue = v
                 chosenAction = action
 
         return chosenAction
@@ -171,27 +171,31 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             
         v = 10000
         for action in state.getLegalActions(unit):
-            if unit == state.getNumAgents() - 1:    
-                v = min(v, self.maxValue(state.generateSuccessor(unit,action), currentRecursionDepth,alpha,beta))
-            else:
-                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth,alpha,beta))
-            
             if v < alpha: return v
-            beta = min(beta,v)
+
+            if unit < state.getNumAgents() - 1:
+                v = min(v, self.minValue(state.generateSuccessor(unit,action), unit+1, currentRecursionDepth,alpha,beta))
+
+            else:    
+                v = min(v, self.maxValue(state.generateSuccessor(unit,action), currentRecursionDepth,alpha,beta))
+            
+            beta = min(beta,v)   
 
         return v
 
 
     def getAction(self, gameState):
-        """
-          Returns the minimax action using self.depth and self.evaluationFunction
-        """
         chosenAction = Directions.STOP
-        currentMaxValue = -100000
+        currentMaxValue = -10000
+        alpha = -10000
+        beta = 10000
         for action in gameState.getLegalActions(0):
-            checkedActionValue = self.minValue(gameState.generateSuccessor(0,action),1,1,-10000,10000)
-            if checkedActionValue > currentMaxValue:
-                currentMaxValue = checkedActionValue
+            v = self.minValue(gameState.generateSuccessor(0,action),1,1,alpha,beta)
+            if v <= beta:
+                alpha = max(alpha,v)
+
+            if v > currentMaxValue:
+                currentMaxValue = v
                 chosenAction = action
 
         return chosenAction
