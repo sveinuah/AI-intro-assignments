@@ -86,7 +86,6 @@ class CSP:
         return self.backtrack(assignment)
 
     def backtrack(self, assignment):
-        print_sudoku_solution(assignment)
         """The function 'Backtrack' from the pseudocode in the
         textbook.
 
@@ -124,9 +123,9 @@ class CSP:
                 if result != False:
                     return result
 
-            assignment.remove(string(number))
+            assignment[node].remove(string(number))
 
-        return false
+        return False
 
     def select_unassigned_variable(self, assignment):
         """The function 'Select-Unassigned-Variable' from the pseudocode
@@ -239,3 +238,7 @@ def print_sudoku_solution(solution):
 
 
 sudoku = create_sudoku_csp("sudokus/easy.txt")
+print_sudoku_solution(sudoku.domains)
+solution = sudoku.backtracking_search()
+print "------------------------------"
+print_sudoku_solution(solution) 
