@@ -145,6 +145,15 @@ class CSP:
         is the initial queue of arcs that should be visited.
         """
         # TODO: IMPLEMENT THIS
+        Xi, Xj = queue.pop(0)
+
+        while len(queue):
+            if self.revise(assignment,Xi,Xj):
+                if not len(assignment[Xi]): return False
+                for Xk, val in self.get_all_neighboring_arcs(Xi):
+                    if (Xk != Xj) and (Xk != Xi):
+                        queue.append((Xk,Xi))
+
         pass
 
     def revise(self, assignment, i, j):
@@ -156,8 +165,15 @@ class CSP:
         between i and j, the value should be deleted from i's list of
         legal values in 'assignment'.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        revised = False
+
+        for x in assignment[i]:
+            for y in assignment[j]:
+                if ((x,y) not in self.constraints[i][j]) and (x != y):
+                    assignment[i].remove(x)
+                    revised = True
+
+        return revised
 
 def create_map_coloring_csp():
     """Instantiate a CSP representing the map coloring problem from the
@@ -220,4 +236,3 @@ def print_sudoku_solution(solution):
 
 
 sudoku = create_sudoku_csp("sudokus/easy.txt")
-
