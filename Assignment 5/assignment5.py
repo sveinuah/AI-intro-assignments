@@ -119,7 +119,9 @@ class CSP:
         of legal values has a length greater than one.
         """
         # TODO: IMPLEMENT THIS
-        pass
+        for node in assignment.keys():
+            if len(assignment[node]) > 1:
+                return node
 
     def inference(self, assignment, queue):
         """The function 'AC-3' from the pseudocode in the textbook.
@@ -200,3 +202,5 @@ def print_sudoku_solution(solution):
         print
         if row == 2 or row == 5:
             print '------+-------+------'
+
+sudoku = create_sudoku_csp("sudokus/easy.txt")
