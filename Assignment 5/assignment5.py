@@ -141,8 +141,14 @@ class CSP:
         between i and j, the value should be deleted from i's list of
         legal values in 'assignment'.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+        revised = False
+
+        for i_val in assignment[i]:
+            for j_val in assignment[j]:
+                if (i_val,j_val) not in self.constraints[i][j]:
+                    assignment[i].remove(i_val)
+                    revised = True
+        return revised
 
 def create_map_coloring_csp():
     """Instantiate a CSP representing the map coloring problem from the
@@ -205,4 +211,3 @@ def print_sudoku_solution(solution):
 
 
 sudoku = create_sudoku_csp("sudokus/easy.txt")
-
