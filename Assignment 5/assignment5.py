@@ -86,6 +86,7 @@ class CSP:
         return self.backtrack(assignment)
 
     def backtrack(self, assignment):
+        print_sudoku_solution(assignment)
         """The function 'Backtrack' from the pseudocode in the
         textbook.
 
@@ -110,15 +111,17 @@ class CSP:
         iterations of the loop.
         """
 
-        node = select_unassigned_variable(assignment)
+        node = self.select_unassigned_variable(assignment)
         if  node == -1: return assignment
 
         for number in assignment[node]:
             newAssignment = copy.deepcopy(assignment)
+            newAssignment[node] = number
 
-            if self.inference(newAassignment,self.get_all_arcs()):
-                result = backtrack(newAassignment)
-                if result != false:
+            if self.inference(newAssignment,self.get_all_arcs()):
+
+                result = self.backtrack(newAssignment)
+                if result != False:
                     return result
 
             assignment.remove(string(number))
@@ -145,16 +148,16 @@ class CSP:
         is the initial queue of arcs that should be visited.
         """
         # TODO: IMPLEMENT THIS
-        Xi, Xj = queue.pop(0)
 
         while len(queue):
+            Xi, Xj = queue.pop(0)
             if self.revise(assignment,Xi,Xj):
                 if not len(assignment[Xi]): return False
                 for Xk, val in self.get_all_neighboring_arcs(Xi):
                     if (Xk != Xj) and (Xk != Xi):
                         queue.append((Xk,Xi))
 
-        pass
+        return True
 
     def revise(self, assignment, i, j):
         """The function 'Revise' from the pseudocode in the textbook.
