@@ -130,6 +130,15 @@ class CSP:
         is the initial queue of arcs that should be visited.
         """
         # TODO: IMPLEMENT THIS
+        Xi, Xj = queue.pop(0)
+
+        while len(queue):
+            if self.revise(assignment,Xi,Xj):
+                if not len(assignment[Xi]): return False
+                for Xk, val in self.get_all_neighboring_arcs(Xi):
+                    if (Xk != Xj) and (Xk != Xi):
+                        queue.append((Xk,Xi))
+
         pass
 
     def revise(self, assignment, i, j):
@@ -143,11 +152,12 @@ class CSP:
         """
         revised = False
 
-        for i_val in assignment[i]:
-            for j_val in assignment[j]:
-                if (i_val,j_val) not in self.constraints[i][j]:
-                    assignment[i].remove(i_val)
+        for x in assignment[i]:
+            for y in assignment[j]:
+                if ((x,y) not in self.constraints[i][j]) and (x != y):
+                    assignment[i].remove(x)
                     revised = True
+
         return revised
 
 def create_map_coloring_csp():
