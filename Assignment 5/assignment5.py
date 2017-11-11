@@ -109,8 +109,21 @@ class CSP:
         assignments and inferences that took place in previous
         iterations of the loop.
         """
-        # TODO: IMPLEMENT THIS
-        pass
+
+        node = select_unassigned_variable(assignment)
+        if  node == -1: return assignment
+
+        for number in assignment[node]:
+            newAssignment = copy.deepcopy(assignment)
+
+            if self.inference(newAassignment,self.get_all_arcs()):
+                result = backtrack(newAassignment)
+                if result != false:
+                    return result
+
+            assignment.remove(string(number))
+
+        return false
 
     def select_unassigned_variable(self, assignment):
         """The function 'Select-Unassigned-Variable' from the pseudocode
@@ -122,6 +135,8 @@ class CSP:
         for node in assignment.keys():
             if len(assignment[node]) > 1:
                 return node
+
+        return -1
 
     def inference(self, assignment, queue):
         """The function 'AC-3' from the pseudocode in the textbook.
