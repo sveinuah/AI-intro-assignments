@@ -170,10 +170,15 @@ class CSP:
         revised = False
 
         for x in assignment[i]:
-            for y in assignment[j]:
-                if ((x,y) not in self.constraints[i][j]) and (x != y):
-                    assignment[i].remove(x)
-                    revised = True
+            validConstraints = []
+            constraints = [(x,y) for y in assignment[j] if x != y]
+            for constraint in constraints:
+                if constraint in self.constraints[i][j]:
+                    validConstraints.append(constraint)
+
+            if len(validConstraints) == 0:
+                assignment[i].remove(x)
+                revised = True
 
         return revised
 
