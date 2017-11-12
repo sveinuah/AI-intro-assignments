@@ -72,12 +72,22 @@ class CSP:
                 self.add_constraint_one_way(i, j, lambda x, y: x != y)
 
     def backtracking_search(self):
+        """
+        Initial call of backtracking-search from chapter 6.3 in the book. The difference is that the variable domains
+        are reduced to fit the initially filled spaces, before starting the recursion.
+        """
 
         assignment = copy.deepcopy(self.domains)
         self.inference(assignment, self.get_all_arcs())
         return self.backtrack(assignment)
 
     def backtrack(self, assignment):
+        """
+        This is the backtrack algorithm from chapter 6.3 in the book, changed to fit the skeleton code structure.
+        Instead of keeping track of inferences, it makes a copy of the original assignment. Discarding failed
+        attempts is therefore easily done with recursion. It also have added a count of how many times it has been called,
+        as well as how many times a recursion has failed.
+        """
         
         global backtrackCalls
         global failures
@@ -101,6 +111,10 @@ class CSP:
         return False
 
     def select_unassigned_variable(self, assignment):
+        """
+        A variable is considered assigned if there is only one value in the domain of a variable.
+        Therefore this function returns a variable with domain-length larger than 1.
+        """
 
         for node in assignment.keys():
             if len(assignment[node]) > 1:
@@ -109,6 +123,11 @@ class CSP:
         return -1
 
     def inference(self, assignment, queue):
+        """
+        The inference function applies arc-consistency of all nodes following a slightly altered version of the AC3 algorithm.
+        By utilizing the revize funtion, it reduces the domains of all nodes in the queue, untill those nodes are arc consistent,
+        and then checks all neighboring nodes, repeating the process.
+        """
 
         while len(queue):
             Xi, Xj = queue.pop(0)
@@ -121,6 +140,12 @@ class CSP:
         return True
 
     def revise(self, assignment, i, j):
+
+        """
+        This function tries to reduce the domain of a node i, by checking valid options for the combination of node i and j.
+        If there are no valid assignment for the value of node j, for any value in the domain of node i, the value will be 
+        removed from the domain if i. It returns true if a domain has been changed, false otherwise.
+        """
 
         revised = False
 
